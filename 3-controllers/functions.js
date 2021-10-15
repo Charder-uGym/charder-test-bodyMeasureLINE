@@ -262,6 +262,27 @@ async function checkUserIdExist() {
     $("#formUserName").attr("disabled", "disabled"); 
     $("#LINE頭像").attr("src", pictureUrl[1]);
     已經是會員 = false;
+    
+    // 2021-10-15 add
+    // 讀取店面名稱和機器序號
+    paramToSend = "?API=30" + "&CustomerId=啟德";
+    var res = await callAPI(paramToSend, '讀取店面名稱');
+    店面名稱 = JSON.parse(res);
+    console.log(店面名稱);    
+    // Append 店面名稱到個人資料中 預設常用健身房 選項
+    for (var i=0; i< 店面名稱.length; i++){
+      $("#預設常用健身房").append("<option value='"+店面名稱[i]+"'>"+店面名稱[i]+"</option>");
+    } 
+    
+    $("#預設常用健身房").val(預設常用健身房); 
+
+    paramToSend = "?API=31" + "&CustomerId=啟德&StoreId="+$("#預設常用健身房").val();      
+    var res = await callAPI(paramToSend, '讀取店面名稱');
+    var machineStatus = res.split(",");
+    機器序號 = machineStatus[0];
+    console.log(機器序號); 
+    // 2021-10-15 add above
+    
     app.navigate('#forms');
   } else {
     console.log("已經是會員");
@@ -283,14 +304,13 @@ async function checkUserIdExist() {
     $("#formUserEthnicity").val(userProfile[10]);
     
     // formEmergencyPhone 挪來用為 常用預設健身房
-    //預設常用健身房 = (userProfile[11]=="undefined")? "永和店":userProfile[11];
+    預設常用健身房 = (userProfile[11]=="undefined")? "開發 T99999999":userProfile[11];
     //$("#預設常用健身房").val(預設常用健身房);  
-    預設常用健身房 ="未來店";
-      
+    
     $("#LINE頭像").attr("src", userProfile[7]);
     
     // 讀取店面名稱和機器序號
-    paramToSend = "?API=30" + "&CustomerId=未來健身";
+    paramToSend = "?API=30" + "&CustomerId=啟德";
     var res = await callAPI(paramToSend, '讀取店面名稱');
     店面名稱 = JSON.parse(res);
     console.log(店面名稱);
@@ -302,7 +322,7 @@ async function checkUserIdExist() {
     
     $("#預設常用健身房").val(預設常用健身房); 
 
-    paramToSend = "?API=31" + "&CustomerId=未來健身&StoreId="+預設常用健身房;      
+    paramToSend = "?API=31" + "&CustomerId=啟德&StoreId="+$("#預設常用健身房").val();      
     var res = await callAPI(paramToSend, '讀取店面名稱');
     var machineStatus = res.split(",");
     機器序號 = machineStatus[0];
@@ -310,7 +330,7 @@ async function checkUserIdExist() {
     
     paramToSend = "?API=32" + "&UserId=" + $("#formUserPhone").val(); //userId[1];
     var res = await callAPI(paramToSend, '讀取量測記錄');
-    console.log(res);
+    //console.log(res);
     var 所有量測數據=JSON.parse(res);
     //console.log(所有量測數據);    
     
@@ -427,7 +447,7 @@ async function 註冊會員() {
 
     if (res == "API:01 會員寫入成功" || res == "API:01 會員已存在" || "API:02 資料更新成功") {
       alert("資料更新成功，回到量測頁面");
-      $("#預設常用健身房標籤").text("未來健身 "+預設常用健身房); 
+      $("#預設常用健身房標籤").text("啟德 "+預設常用健身房); 
       $("#所在健身房說明").text("如果目前不在 "+預設常用健身房+ " ，請到個人資料(首頁右上角圖示)修改預設常用健身房，再回來測量。");
       checkUserIdExist();
       已經是會員 = true;
@@ -495,7 +515,7 @@ function 送出量測要求() {
     return 1;
   }
 
-  console.log("進行量測:"+"未來健身"+預設常用健身房);
+  console.log("進行量測:"+"啟德"+預設常用健身房);
   app.navigate('2-views/進行量測.html');
 }
 

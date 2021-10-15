@@ -14,29 +14,29 @@
 
     <div data-role="view" data-init="initData"  data-title="進行量測" style="font-family:'Noto Sans TC';" data-use-native-scrolling="true" data-show="kendoViewReady" >
 
-      <div data-role="content" style="background-color: white;"> 
+      <div data-role="content" style="
+                                  background-color: black;
+                                  "> 
 
-        <p style="font-size:18px; color:black; margin-top:20px; margin-left:20px">
-          <span>1. 請確認機台序號是:</span><span id="testMachineSN">T99999999</span>
-        </p>
-        <!--<p id="所在健身房說明" style="font-size:16px; color:black; width:80%; margin-left:40px;; margin-bottom:5px"></p>-->
+        <p style="font-size:18px; color: white; margin-top:20px; margin-left:20px">1. 請確認<b> 目前</b> 所在的健身房</p>
+        <p id="所在健身房說明" style="font-size:16px; color: gray; width:80%; margin-left:40px;; margin-bottom:5px"></p>
         
-        <div id="店面" class="店面陣列" align="center" style="display:none" >
+        <div id="店面" class="店面陣列" align="center">
           <a id="預設常用健身房標籤" style="font-size: 18px; color: white; background-color:gray; padding:10px;width: 80%" onclick=""></a>        
         </div>           
 
-        <p style="font-size:18px; color:black; margin-left:20px; margin-top: 20px">2. 請按下按鈕，送出測量要求</p>      
+        <p style="font-size:18px; color: white; margin-left:20px; margin-top: 20px">2. 請按下按鈕，送出測量要求</p>      
 
-        <!--<p id="測量限制" style="font-size:16px; color:black; text-align:left; margin-left:40px;width:80%">為讓更多人使用，距離上次量測須超過一小時，才能再度量測，謝謝您的合作。</p>         -->
+        <p id="測量限制" style="font-size:16px; color:gray; text-align:left; margin-left:40px;width:80%">為讓更多人使用，距離上次量測須超過一小時，才能再度量測，謝謝您的合作。</p>         
         <p id="上次測量時間" style="font-size:16px; color:gray; text-align:center">上次測量時間:</p> 
         
-        <button id="開始測量按鈕" class="NotoSansFont" style="float:left; margin-left: 50px; font-size: 18px; color: white; background-color:#FF4350; padding:10px;border-radius:8px; border-style: none" onclick="送出要求測量()">開始測量</button> 
+        <button id="開始測量按鈕" class="NotoSansFont" style="float:left; margin-left: 50px; font-size: 18px; color: white; background-color:red; padding:10px;border-radius:8px; border-style: none" onclick="送出要求測量()">開始測量</button> 
         <button id="取消測量按鈕" class="NotoSansFont" style="float:right; margin-right: 50px; font-size: 18px; color: white; background-color:teal; padding:10px;border-radius:8px; border-style: none" onclick="取消測量()">取消測量</button>         
         <br><br><br>
         
         <div id="第三步Div" style="display: none">
-          <p style="font-size:18px; color: black; margin:20px; margin-top: 20px">3. 請到 身體組成分析儀 上，進行測量</p> 
-          <p id="測量訊息" style="font-size:18px; color: black; margin-left:40px"></p>    
+          <p style="font-size:18px; color: white; margin:20px; margin-top: 20px">3. 請到 身體組成分析儀 上，進行測量</p> 
+          <p id="測量訊息" style="font-size:18px; color: white; margin-left:40px"></p>    
           
           <div id="loadingProgressBar" style="margin-left:20px; margin-right: 20px; width: 90%"></div>                
           
@@ -72,7 +72,7 @@
       function kendoViewReady() {
         console.log( "ready!" );
         
-        $("#預設常用健身房標籤").text("未來健身 "+預設常用健身房); 
+        $("#預設常用健身房標籤").text("啟德 "+預設常用健身房); 
         $("#所在健身房說明").text("如果目前不在 "+預設常用健身房+ " ，請到個人資料(首頁右上角圖示)修改預設常用健身房，再回來測量。");
 //        for (var i=0; i<店面名稱.length;i++) {
 //          
@@ -140,47 +140,42 @@
       
       var checkStatusInterval;
       async function 送出要求測量(){
-        console.log("送出要求測量", selectedStoreNum, 機器序號);
-        
-        //demo 先固定為 府中店
-        預設常用健身房 = "未來店";
+        console.log("送出要求測量", selectedStoreNum, 機器序號[selectedStoreNum]);
         
         // 檢查距離上次量測時間
-        //var tmpTimeNow     = new Date(toISOStringWithTimeZone());
-        //var tmpTimeNowInMs = tmpTimeNow.getTime();
-        //$("#debug1").text("現在時間:" +toISOStringWithTimeZone()+" "+tmpTimeNowInMs.toString());
+        var tmpTimeNow     = new Date(toISOStringWithTimeZone());
+        var tmpTimeNowInMs = tmpTimeNow.getTime();
+        $("#debug1").text("現在時間:" +toISOStringWithTimeZone()+" "+tmpTimeNowInMs.toString());
         
         var tmpLastTime     = new Date(上次測量時間Str);
         var tmpLastTimeInMs = tmpLastTime.getTime();  
 
         
-        //if ( (tmpTimeNowInMs-tmpLastTimeInMs) < 60000 ) {
-        //  alert("為讓更多人使用，也是保障您的權益，距離上次量測須超過一小時，才能再度量測，謝謝您的合作。");
-        //  return;
-        //}
+        if ( (tmpTimeNowInMs-tmpLastTimeInMs) < 60000 ) {
+          alert("為讓更多人使用，也是保障您的權益，距離上次量測須超過一小時，才能再度量測，謝謝您的合作。");
+          return;
+        }
          
         // Check if Device is in use
-        paramToSend = "?API=31" + "&CustomerId=未來健身&StoreId=未來店"; //+預設常用健身房;      
+        paramToSend = "?API=31" + "&CustomerId=啟德&StoreId="+$("#預設常用健身房").val();      
         var res = await callAPI(paramToSend, '讀取機器狀態');
         console.log(res);
         var machineStatus = res.split(",");
-        
         var 目前機器狀態 = machineStatus[1];
         var 機器更新時間 = machineStatus[2];
         console.log(目前機器狀態, 機器更新時間);        
         
-        //if ((Date.now()- 機器更新時間) > 5*60*1000) {
-        //  alert("抱歉，此機器未連上雲端，請檢查機器是否有連上網路");
-        //  return;          
-        //}
+        if ((Date.now()- 機器更新時間) > 5*60*1000) {
+          alert("抱歉，此機器未連上雲端，請檢查機器是否有連上網路");
+          return;          
+        }
         if (目前機器狀態.substr(0,3) =="使用中"){
           alert("抱歉，此機器已有人要求量測。請耐心等候");
           return;
         }
         
         
-        //if (confirm("為了您的權益，請檢查是在未來健身 "+預設常用健身房+" 身體組成分析儀 序號:"+機器序號+"上進行量測。\n\n序號可在機器上查對")) { 
-        if (confirm("請確定是在 身體組成分析儀 序號:"+機器序號+"上進行量測。\n\n序號可在機器上查對")) { 
+        if (confirm("為了您的權益，請檢查是在啟德 "+預設常用健身房+" 身體組成分析儀 序號:"+機器序號+"上進行量測。\n\n序號可在機器上查對")) { 
           $("#開始測量按鈕").attr("disabled", true);
           $("#開始測量按鈕").css("background-color", "gray"); 
           
@@ -189,11 +184,11 @@
           console.log("call API 送出要求測量");
                     
           $("#取消測量按鈕").attr("disabled", false);  
-          $("#取消測量按鈕").css("background-color", "#FF4350");    
+          $("#取消測量按鈕").css("background-color", "red");    
           
           $(".km-back").css("visibility", "hidden");
         
-          paramToSend = "?API=20&UserId="+userId[1]+"&CustomerId=未來健身&StoreId="+預設常用健身房+"&PhoneNumber="+$("#formUserPhone").val();
+          paramToSend = "?API=20&UserId="+userId[1]+"&CustomerId=啟德&StoreId="+預設常用健身房+"&PhoneNumber="+$("#formUserPhone").val();
           console.log(paramToSend);           
           var res = await callAPI(paramToSend, '讀取店面名稱');
           console.log(res); 
@@ -214,7 +209,7 @@
         clearInterval(checkStatusInterval);   
         
         // 透過 ASPI=21 取消 量測要求
-        paramToSend = "?API=21&UserId="+userId[1]+"&CustomerId=未來健身&StoreId="+預設常用健身房;
+        paramToSend = "?API=21&UserId="+userId[1]+"&CustomerId=啟德&StoreId="+預設常用健身房;
         var res = await callAPI(paramToSend, '');
         var 取消量測回覆=res;
         console.log(取消量測回覆); 
@@ -231,7 +226,7 @@
       ];
       
       async function checkMeasurementStatus(){
-        paramToSend = "?API=22&UserId="+userId[1]+"&CustomerId=未來健身&StoreId="+預設常用健身房;
+        paramToSend = "?API=22&UserId="+userId[1]+"&CustomerId=啟德&StoreId="+預設常用健身房;
         var res = await callAPI(paramToSend, '');
         var 現在量測狀態=res;
         console.log(現在量測狀態); 
@@ -284,7 +279,7 @@
             // 移除已完成的 量測要求
             // ugly fix 避免在 API 還在用 量測要求 時就刪除掉 
             setTimeout(async function(){
-              paramToSend = "?API=23&UserId="+userId[1]+"&CustomerId=未來健身&StoreId="+預設常用健身房;
+              paramToSend = "?API=23&UserId="+userId[1]+"&CustomerId=啟德&StoreId="+預設常用健身房;
               var res = await callAPI(paramToSend, '');            
               console.log(res)}, 500);         
             
@@ -292,7 +287,7 @@
           case "機台要求取消":
             clearInterval(checkStatusInterval);             
             alert("機台端取消量測"); 
-            paramToSend = "?API=23&UserId="+userId[1]+"&CustomerId=未來健身&StoreId="+預設常用健身房;
+            paramToSend = "?API=23&UserId="+userId[1]+"&CustomerId=啟德&StoreId="+預設常用健身房;
             var res = await callAPI(paramToSend, ''); 
             console.log(res);
             app.navigate("#:back");  
@@ -301,7 +296,7 @@
           case "機台已有人在使用":
             clearInterval(checkStatusInterval);             
             alert("機台已有人在使用"); 
-            paramToSend = "?API=23&UserId="+userId[1]+"&CustomerId=未來健身&StoreId="+預設常用健身房;
+            paramToSend = "?API=23&UserId="+userId[1]+"&CustomerId=啟德&StoreId="+預設常用健身房;
             var res = await callAPI(paramToSend, ''); 
             console.log(res);
             app.navigate("#:back");       
@@ -311,7 +306,7 @@
             console.log("未知量測狀態");
             clearInterval(checkStatusInterval);   
             alert("未知量測狀態"); 
-            paramToSend = "?API=23&UserId="+userId[1]+"&CustomerId=未來健身&StoreId="+預設常用健身房;
+            paramToSend = "?API=23&UserId="+userId[1]+"&CustomerId=啟德&StoreId="+預設常用健身房;
             var res = await callAPI(paramToSend, ''); 
             console.log(res);
             app.navigate("#:back");       
